@@ -60,6 +60,11 @@ contract LiaoToken is IERC20 {
 
     function transfer(address to, uint256 amount) external returns (bool) {
         // TODO: please add your implementaiton here
+        if(_balances[msg.sender] < amount)
+            return false;
+        _balances[to] += amount;
+        _balances[msg.sender] -= amount;
+        return true;
     }
 
     function transferFrom(address from, address to, uint256 value) external returns (bool) {

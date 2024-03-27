@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import {console2} from "forge-std/Test.sol";
 
 interface IERC20 {
     function totalSupply() external view returns (uint256);
@@ -17,6 +18,7 @@ contract LiaoToken is IERC20 {
     // TODO: you might need to declare several state variable here
     mapping(address account => uint256) private _balances;
     mapping(address account => bool) isClaim;
+    mapping(address=>mapping(address=>uint)) allowed;
 
     uint256 private _totalSupply;
 
@@ -60,22 +62,31 @@ contract LiaoToken is IERC20 {
 
     function transfer(address to, uint256 amount) external returns (bool) {
         // TODO: please add your implementaiton here
-        if(_balances[msg.sender] < amount)
-            return false;
         _balances[to] += amount;
         _balances[msg.sender] -= amount;
+        emit Transfer(msg.sender, to, amount);
         return true;
     }
 
     function transferFrom(address from, address to, uint256 value) external returns (bool) {
-        // TODO: please add your implementaiton here
+        // TODO: please add your implementaiton here\
+        uint allowance = allowed[from][to];
+        _balances[from] -= value;
+        _balances[to] += value;
+        allowed[from][msg.sender] -= value;
+        emit Transfer(from, to, value);
+        return true;
     }
 
     function approve(address spender, uint256 amount) external returns (bool) {
         // TODO: please add your implementaiton here
+        allowed[msg.sender][spender] = amount;
+        emit Approval(msg.sender, spender, amount);
+        return true;
     }
 
     function allowance(address owner, address spender) public view returns (uint256) {
         // TODO: please add your implementaiton here
+        return allowed[owner][spender];
     }
 }

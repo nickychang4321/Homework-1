@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import {console} from "forge-std/Test.sol";
 
 /* Problem 1 Interface & Contract */
 contract StudentV1 {
@@ -32,5 +33,11 @@ contract StudentV2 {
 contract StudentV3 {
     function register() external view returns (uint256) {
         // TODO: please add your implementaiton here
+        if(gasleft() < 5000)
+            return 123;
+        uint256 a = 1;
+        while(gasleft() >= 5000)
+            a += 5;
+        return 1000;
     }
 }
